@@ -1,0 +1,11 @@
+{
+  "name": "fastq-viewer",
+  "version": "1.0.0",
+  "description": "FASTQ read viewer with per-base quality score heatmap, Q-score distribution, and read length statistics",
+  "extensions": [
+    "fastq",
+    "fq"
+  ],
+  "entry": "index.js",
+  "style": "style.css"
+}

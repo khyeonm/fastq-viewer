@@ -1,0 +1,135 @@
+.fastq-plugin {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  color: #333;
+}
+
+.fastq-summary {
+  display: flex;
+  gap: 16px;
+  padding: 10px 14px;
+  background: #f0f4f8;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.fastq-summary .stat { font-size: 12px; color: #555; }
+.fastq-summary .stat b { color: #1a1a1a; }
+.fastq-summary .stat .good { color: #2e7d32; }
+.fastq-summary .stat .warn { color: #e65100; }
+
+.fastq-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.fastq-controls input[type="text"] {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  width: 260px;
+}
+
+.fastq-list {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.fastq-entry { border-bottom: 1px solid #f0f0f0; }
+.fastq-entry:last-child { border-bottom: none; }
+
+.fastq-read-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background: #f7f8fa;
+  cursor: pointer;
+  user-select: none;
+}
+.fastq-read-header:hover { background: #ebedf0; }
+.fastq-read-name {
+  font-family: monospace;
+  font-size: 11px;
+  color: #1565c0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 55%;
+}
+.fastq-read-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: #777;
+}
+.q-badge {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 10px;
+}
+.q-good { background: #e8f5e9; color: #2e7d32; }
+.q-ok { background: #fff3e0; color: #e65100; }
+.q-bad { background: #ffebee; color: #c62828; }
+
+.fastq-detail {
+  padding: 8px 12px;
+  background: #fafafa;
+  overflow-x: auto;
+}
+
+.fastq-bases {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  word-break: break-all;
+}
+.fastq-qual-row {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  line-height: 1.4;
+  word-break: break-all;
+  margin-top: 4px;
+}
+.qual-cell {
+  display: inline-block;
+  width: 8px;
+  text-align: center;
+  font-size: 9px;
+  color: #fff;
+  border-radius: 1px;
+}
+
+.base-A { color: #2e7d32; font-weight: 600; }
+.base-T { color: #c62828; font-weight: 600; }
+.base-G { color: #f9a825; font-weight: 600; }
+.base-C { color: #1565c0; font-weight: 600; }
+.base-N { color: #999; }
+
+.fastq-pagination {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.fastq-pagination button {
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+.fastq-pagination button:hover { background: #eee; }
+.fastq-pagination button.current { background: #4a90d9; color: #fff; border-color: #4a90d9; }
+.fastq-pagination .page-info { font-size: 12px; color: #666; margin: 0 8px; }
+
+.fastq-loading { text-align: center; padding: 40px; color: #888; }
