@@ -112,16 +112,15 @@
   function render() {
     if (!rootEl) return;
     var stats = computeStats(allReads);
-    var totalPages = Math.max(1, Math.ceil(filteredReads.length / PAGE_SIZE));
-    if (currentPage >= totalPages) currentPage = totalPages - 1;
+    var totalPages = Math.max(1, Math.ceil(_totalReads / PAGE_SIZE));
     var startIdx = currentPage * PAGE_SIZE;
-    var pageReads = filteredReads.slice(startIdx, startIdx + PAGE_SIZE);
+    var pageReads = filteredReads;
 
     var html = '<div class="fastq-plugin">';
 
     // Summary
     html += '<div class="fastq-summary">';
-    html += '<span class="stat"><b>' + formatNum(allReads.length) + '</b> reads</span>';
+    html += '<span class="stat"><b>' + formatNum(_totalReads) + '</b> reads</span>';
     html += '<span class="stat"><b>' + formatNum(stats.totalBases) + '</b> total bases</span>';
     html += '<span class="stat">Length: <b>' + formatNum(stats.minLen) + ' - ' + formatNum(stats.maxLen) + '</b> (avg ' + formatNum(stats.avgLen) + ')</span>';
     html += '<span class="stat">Mean Q: <b>' + stats.avgQ + '</b></span>';
@@ -201,12 +200,50 @@
     for (var i = 0; i < pbs.length; i++) {
       pbs[i].addEventListener('click', function() {
         var pg = this.getAttribute('data-page');
-        if (pg === 'prev') { if (currentPage > 0) currentPage--; }
-        else if (pg === 'next') { var tp = Math.ceil(filteredReads.length / PAGE_SIZE); if (currentPage < tp - 1) currentPage++; }
-        else { currentPage = parseInt(pg, 10); }
-        render();
+        var tp = Math.ceil(_totalReads / PAGE_SIZE);
+        if (pg === 'prev') { if (currentPage > 0) _loadPage(currentPage - 1); }
+        else if (pg === 'next') { if (currentPage < tp - 1) _loadPage(currentPage + 1); }
+        else { _loadPage(parseInt(pg, 10)); }
       });
     }
+  }
+
+  var _totalReads = 0;
+  var _currentFilename = '';
+
+  function _fetchPage(filename, page) {
+    return fetch('/data/' + encodeURIComponent(filename) + '?page=' + page + '&page_size=' + PAGE_SIZE)
+      .then(function(resp) { return resp.json(); });
+  }
+
+  function _loadPage(page) {
+    if (!rootEl) return;
+    rootEl.innerHTML = '<div class="ap-loading">Loading...</div>';
+
+    _fetchPage(_currentFilename, page).then(function(data) {
+      if (data.error) {
+        rootEl.innerHTML = '<p style="color:red;padding:16px;">Error: ' + data.error + '</p>';
+        return;
+      }
+      _totalReads = data.total || _totalReads;
+      currentPage = page;
+      var text = '';
+      if (data.rows) {
+        for (var i = 0; i < data.rows.length; i++) {
+          var row = data.rows[i];
+          text += (Array.isArray(row) ? row.join('\t') : row) + '\n';
+        }
+      }
+      allReads = parse(text);
+      filteredReads = [];
+      for (var i = 0; i < allReads.length; i++) {
+        filteredReads.push({ idx: i, data: allReads[i] });
+      }
+      expandedIdx = {};
+      render();
+    }).catch(function(err) {
+      rootEl.innerHTML = '<p style="color:red;padding:16px;">Error: ' + err.message + '</p>';
+    });
   }
 
   window.AutoPipePlugin = {
@@ -214,17 +251,8 @@
       rootEl = container;
       rootEl.innerHTML = '<div class="ap-loading">Loading...</div>';
       allReads = []; filteredReads = []; currentPage = 0; filterText = ''; expandedIdx = {};
-
-      fetch(fileUrl)
-        .then(function(resp) { return resp.text(); })
-        .then(function(data) {
-          allReads = parse(data);
-          applyFilter();
-          render();
-        })
-        .catch(function(err) {
-          rootEl.innerHTML = '<p style="color:red;padding:16px;">Error loading file: ' + err.message + '</p>';
-        });
+      _currentFilename = filename;
+      _loadPage(0);
     },
     destroy: function() { allReads = []; filteredReads = []; rootEl = null; }
   };
