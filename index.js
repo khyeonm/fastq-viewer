@@ -212,7 +212,7 @@
   window.AutoPipePlugin = {
     render: function(container, fileUrl, filename) {
       rootEl = container;
-      rootEl.innerHTML = '<div class="fastq-loading">Loading ' + filename + '...</div>';
+      rootEl.innerHTML = '<div class="ap-loading">Loading...</div>';
       allReads = []; filteredReads = []; currentPage = 0; filterText = ''; expandedIdx = {};
 
       fetch(fileUrl)
